@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">BottomTabs</string>
+
+    <string name="home">Home</string>
+    <string name="bundles">Bundle</string>
+    <string name="bill">Bill</string>
+    <string name="reminder">Reminder</string>
+
+</resources>

@@ -4,6 +4,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TabHost;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 
 import com.yjn.bottomtabs.R;
 import com.yjn.bottomtabs.intf.BaseViewInterface;
+import com.yjn.bottomtabs.widget.BadgeView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -19,6 +22,8 @@ public class MainActivity extends AppCompatActivity implements BaseViewInterface
 
     @InjectView(android.R.id.tabhost)
     public FragmentTabHost mTabHost;
+
+    public BadgeView mBvNotice; //未读信息条数 , 类似于QQ底部导航的设计
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,16 +72,38 @@ public class MainActivity extends AppCompatActivity implements BaseViewInterface
                 Drawable drawable = this.getResources().getDrawable(mainTab.getResIcon());
 
                 title.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
-                title.setText(getString(mainTab.getResName()));
-                tab.setIndicator(indicator);
-                tab.setContent(new TabHost.TabContentFactory() {
-                    @Override
-                    public View createTabContent(String tag) {
-                        return new View(MainActivity.this);
-                    }
-                });
-                mTabHost.addTab(tab, mainTab.getClz(), null);
 
+                if(getString(mainTab.getResName()).equals(getString(R.string.reminder))){
+
+                    View cn = indicator.findViewById(R.id.tab_mes);
+                    mBvNotice = new BadgeView(MainActivity.this, cn);
+                    mBvNotice.setBadgePosition(BadgeView.POSITION_TOP_LEFT);
+                    mBvNotice.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
+                    mBvNotice.setBackgroundResource(R.drawable.home_badge_circle_bk);
+                    mBvNotice.setGravity(Gravity.CENTER);
+                    //mBvNotice.hide(); //隐藏 对应消息组件
+                    title.setText(getString(mainTab.getResName()));
+                    tab.setIndicator(indicator);
+                    tab.setContent(new TabHost.TabContentFactory() {
+                        @Override
+                        public View createTabContent(String tag) {
+                            return new View(MainActivity.this);
+                        }
+                    });
+                    mTabHost.addTab(tab, mainTab.getClz(), null);
+                }
+
+                else {
+                    title.setText(getString(mainTab.getResName()));
+                    tab.setIndicator(indicator);
+                    tab.setContent(new TabHost.TabContentFactory() {
+                        @Override
+                        public View createTabContent(String tag) {
+                            return new View(MainActivity.this);
+                        }
+                    });
+                    mTabHost.addTab(tab, mainTab.getClz(), null);
+                }
             }
         } catch (Exception e) {
         }
@@ -90,6 +117,11 @@ public class MainActivity extends AppCompatActivity implements BaseViewInterface
      */
     @Override
     public void onTabChanged(String tabId) {
+
+        //这里只是一样demo,具体使用要根据与需求来
+        // 只要 tab变化,就展示未读消息
+        mBvNotice.setText("8");
+        mBvNotice.show();
 
         final int size = mTabHost.getTabWidget().getTabCount();
 

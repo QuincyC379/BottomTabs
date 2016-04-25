@@ -24,39 +24,6 @@ public class MainActivity extends AppCompatActivity implements BaseViewInterface
     public FragmentTabHost mTabHost;
 
     public BadgeView mBvNotice; //未读信息条数 , 类似于QQ底部导航的设计
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        ButterKnife.inject(this);
-
-        initView();
-    }
-
-    @Override
-    public void initView() {
-        mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-        if (android.os.Build.VERSION.SDK_INT > 10) {
-            mTabHost.getTabWidget().setShowDividers(0);
-        }
-        initTabs();
-
-        mTabHost.setCurrentTab(0);
-        mTabHost.setOnTabChangedListener(this);
-    }
-
-    @Override
-    public void initData() {
-
-    }
-
-    @Override
-    public void onClick(View v) {
-
-    }
-
     /**
      * 创建底部导航按钮
      */
@@ -73,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements BaseViewInterface
 
                 title.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
 
+                // reminder页卡设置未读消息条数
                 if(getString(mainTab.getResName()).equals(getString(R.string.reminder))){
 
                     View cn = indicator.findViewById(R.id.tab_mes);
@@ -108,6 +76,38 @@ public class MainActivity extends AppCompatActivity implements BaseViewInterface
         } catch (Exception e) {
         }
         mTabHost.getTabWidget().setDividerDrawable(android.R.color.transparent);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        ButterKnife.inject(this);
+
+        initView();
+    }
+
+    @Override
+    public void initView() {
+        mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
+        if (android.os.Build.VERSION.SDK_INT > 10) {
+            mTabHost.getTabWidget().setShowDividers(0);
+        }
+        initTabs();
+
+        mTabHost.setCurrentTab(0);
+        mTabHost.setOnTabChangedListener(this);
+    }
+
+    @Override
+    public void initData() {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 
     /**
